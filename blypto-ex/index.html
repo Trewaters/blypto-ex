@@ -1,34 +1,35 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Barchart Demo</title>
+    <title>Axis Demo</title>
     <script src="https://d3js.org/d3.v4.min.js"></script>
   </head>
   <body>
-    <svg width="500" height="500" style="border: 1px solid">
-    </svg>
     <script>
-      var data = [10, 15, 25, 120, 500, 980, 1200];
+      var svgContainer = d3.select("body")
+        .append("svg")
+          .attr("width", 500)
+          .attr("height", 400)
+          .style("padding", "10px")
+          .style("border", "1px solid");
       
-      // Create yScale
-      var yScale = d3.scaleLinear()
-                     .domain([10, 1200])
-                     .range([0, 500]);
+      var xScale = d3.scaleLinear()
+          .domain([0, 100])
+          .range([0, 500]);
       
-      d3.select("svg")
-        .selectAll("rect")
-        .data(data)
-        .enter()
-        .append("rect")
-          .attr("width", 30)
-          .attr("height", function(d) { return yScale(d); })
-          .attr("x", function(d, i) { return i * 30; })
-          .attr("y", 0)
-          .style("fill", "blue")
-		  .style("stroke", "black")
-		  .style("stroke-width", "1px")
-		  .style("opacity", .25);
+      var xAxis = d3.axisBottom(xScale);
       
+      svgContainer.append("g")
+          .call(xAxis);
+      
+      // To place the axis at the bottom of the container
+      /*
+      svgContainer.append("g")
+          .attr("transform", function() {
+            return "translate(" + 0 + "," + 390 + ")"
+          })
+          .call(xAxis);
+      */
     </script>
   </body>
 </html>
