@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <meta name="description" content="Line Interpolators(Curves) Demo">
-    <title>Line Interpolators(Curves) Demo</title>
+    <meta name="description" content="Area Interpolators Demo">
+    <title>Area Interpolators(Curves) Demo</title>
     <script src="https://d3js.org/d3.v4.min.js"></script>
   </head>
   <body>
@@ -42,8 +42,7 @@
         cardinalClosed: d3.curveCardinalClosed,
         step: d3.curveStep,
         stepBefore: d3.curveStepBefore,
-        stepAfter: d3.curveStepAfter,
-        bundle: d3.curveBundle
+        stepAfter: d3.curveStepAfter
       };
       
       var svgContainer = d3.select("body")
@@ -78,26 +77,27 @@
           .call(yAxis);
       
       function render(curveType) {
-        d3.selectAll("path.line1,path.line2").remove();
+        d3.selectAll("path.area1,path.area2").remove();
         
-        line = d3.line()
+        area = d3.area()
           .x(function(d) { return xScale(d.x); })
-          .y(function(d) { return yScale(d.y); })
-          .curve(curveTypeMap[curveType]); // Specifies the curve type (interpolation)
+          .y0(yScale(0))
+          .y1(function(d) { return yScale(d.y); })
+          .curve(curveTypeMap[curveType])
         
         svgContainer.append("path")
-          .classed("line1", true)
-          .attr("d", line(data1))
-          .attr("fill", "none")
+          .classed("area1", true)
+          .attr("d", area(data1))
+          .attr("fill", "#ffad99")
           .attr("stroke", "red")
           .attr("transform", function() {
             return "translate(" + margin + "," + margin + ")";
           });
       
         svgContainer.append("path")
-          .classed("line2", true)
-          .attr("d", line(data2))
-          .attr("fill", "none")
+          .classed("area2", true)
+          .attr("d", area(data2))
+          .attr("fill", "#b3d9ff")
           .attr("stroke", "blue")
           .attr("transform", function() {
             return "translate(" + margin + "," + margin + ")";
@@ -118,6 +118,5 @@
     <button onclick="render('step')">Step</button>
     <button onclick="render('stepBefore')">Step Before</button>
     <button onclick="render('stepAfter')">Step After</button>
-    <button onclick="render('bundle')">Bundle</button>
   </body>
 </html>
