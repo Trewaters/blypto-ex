@@ -1,28 +1,15 @@
 <!DOCTYPE html>
 <html>
   <head>
-<meta name="description" content="Arc Generator Demo">
-    <title>Arc generator Demo</title>
+<meta name="description" content="Pie Generator Demo">
+    <title>Pie Generator Demo</title>
     <script src="https://d3js.org/d3.v4.min.js"></script>
   </head>
   <body>
     <script>
       var width = 500;
-      var height = 500;
-      var fullAngle = 2 * Math.PI;
-      
-      var arc1 = d3.arc()
-          .innerRadius(0)
-          .outerRadius(100)
-          .startAngle(0)
-          .endAngle(fullAngle / 4);
-      
-      var arc2 = d3.arc()
-          .innerRadius(50)
-          .outerRadius(100)
-          .startAngle(0)
-          .endAngle(fullAngle);
-       
+      var height = 500; 
+      var color = d3.scaleOrdinal(d3.schemeCategory10);
       
       var svgContainer = d3.select("body")
         .append("svg")
@@ -30,20 +17,22 @@
           .attr("height", height)
           .style("border", "1px solid");
       
-      var group1 = svgContainer.append("g");
-      var group2 = svgContainer.append("g");
+      var data = [1, 2, 1, 5, 6, 8, 10];
       
-      group1.append("path")
-          .attr("d", arc1())
-          .attr("fill", "red");
+      var arc = d3.arc()
+          .outerRadius(100)
+          .innerRadius(0);
       
-       group2.append("path")
-          .attr("d", arc2())
-          .attr("fill", "blue");
-          
-       group1.attr("transform", "translate(" + 200 + "," + 200 + ")");
-       group2.attr("transform", "translate(" + 200 + "," + 350 + ")");
+      var group = svgContainer.append("g")
+          .attr("transform", "translate(" + 200 + "," + 250 + ")")
       
+      var arcs = d3.pie()(data);
+      
+      arcs.forEach(function(d, i) {
+        group.append("path")
+            .attr("d", arc(d))
+            .attr("fill", color(i)); 
+      });
     </script>
   </body>
 </html>
