@@ -1,77 +1,34 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Axis Demo</title>
+    <title>Transition Easing Demo</title>
     <script src="https://d3js.org/d3.v4.min.js"></script>
-    <style type="text/css">
-    .grid-line {
-  fill: grey;
-  stroke: grey;
-  stroke-width: 0.3px;
-}
-</style> 
   </head>
   <body>
+    <p>Elastic</p>
+    <div class="elastic" style="width:100px; height:50px; background-color:red"></div>
+    <p>Bounce</p>
+    <div class="bounce" style="width:100px; height:50px; background-color:red"></div>
+    <p>Back</p>
+    <div class="back" style="width:100px; height:50px; background-color:red"></div>
     <script>
-      var width = 500;
-      var height = 500;
-      var margin = 25;
-      var axisLength = width - 2 * margin; 
-      
-      var svgContainer = d3.select("body")
-        .append("svg")
-          .attr("width", width)
-          .attr("height", height)
-          .style("border", "1px solid");
-      
-      function renderXAxis() {
-        var xScale = d3.scaleLinear()
-          .domain([0, 100])
-          .range([0, axisLength]);
-        
-        var xAxis = d3.axisBottom(xScale);
-        
-        svgContainer.append("g")
-            .classed("x-axis", true)
-            .attr("transform", function() {
-              return "translate(" + margin + "," + (height - margin) + ")";
-            })
-            .call(xAxis);
-        
-        svgContainer.selectAll("g.x-axis g.tick")
-          .append("line")
-            .classed("grid-line", true)
-            .attr("x1", 0)
-            .attr("y1", 0)
-            .attr("x2", 0)
-            .attr("y2", -(height - 2 * margin));
+      function applyTransition(selection, ease, delay) {
+        selection.transition()
+        .ease(ease)
+        .delay(delay)
+        .duration(2000)
+        .style("transform", "translateX(400px)")
+        .style("background-color", "blue");
       }
       
-      function renderYAxis() {
-        var yScale = d3.scaleLinear()
-          .domain([100, 0])
-          .range([0, axisLength]);
-        
-        var yAxis = d3.axisLeft(yScale);
-        
-        svgContainer.append("g")
-            .classed("y-axis", true)
-            .attr("transform", function() {
-              return "translate(" + margin + "," + margin + ")";
-            })
-            .call(yAxis);
-        
-        svgContainer.selectAll("g.y-axis g.tick")
-          .append("line")
-            .classed("grid-line", true)
-            .attr("x1", 0)
-            .attr("y1", 0)
-            .attr("x2", axisLength)
-            .attr("y2", 0);
-      }
+      d3.select("div.elastic")
+        .call(applyTransition, d3.easeElastic, 1000)
       
-      renderXAxis();
-      renderYAxis();
+      d3.select("div.bounce")
+        .call(applyTransition, d3.easeBounce, 2000);
+
+      d3.select("div.back")
+        .call(applyTransition, d3.easeBack, 4000);
     </script>
   </body>
 </html>
