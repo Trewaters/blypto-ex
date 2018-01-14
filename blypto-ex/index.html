@@ -1,116 +1,79 @@
 <!DOCTYPE html>
 <html>
   <head>
-<meta name="description" content="Stack Layout Demo">
-    <title>Stack Layout Demo</title>
+<meta name="description" content="Tree Layout Demo">
+    <title>Tree Layout Demo</title>
     <script src="https://d3js.org/d3.v4.min.js"></script>
   </head>
   <body>
     <script>
-      var width = 500;
-      var height = 500;
-      var margin = 25;
-      var axisLength = width - 2 * margin; 
-      
       var data = [
-        {month: "2013", apples: 100, bananas: 200, oranges: 130},
-        {month: "2014", apples: 300, bananas: 150, oranges: 120},
-        {month: "2015", apples:  200, bananas:  280, oranges: 200},
-        {month: "2016", apples:  400, bananas:  100, oranges: 300},
-        {month: "2017", apples:  230, bananas:  400, oranges: 100}
+        {"name": "John",   "parent": ""},
+        {"name": "Jack",  "parent": "John"},
+        {"name": "Drake",  "parent": "John"},
+        {"name": "Keith",  "parent": "Drake"},
+        {"name": "Harry",  "parent": "Drake"},
+        {"name": "Joshua",  "parent": "John"},
+        {"name": "Smith",  "parent": "John"},
+        {"name": "Peter", "parent": "Smith"},
+        {"name": "Larry", "parent": "John"}
       ];
       
-      var stack = d3.stack()
-          .keys(["apples", "bananas", "oranges"]);
-      
-      var series = stack(data);
-      console.log(series);
-      
-      var xScale = d3.scaleBand()
-          .domain(data.map(function(d) { return d.month; }))
-          .rangeRound([0, axisLength]);
-      
-      var yScale = d3.scaleLinear()
-          .domain([stackMax(), stackMin()])
-          .range([0, axisLength]).clamp(true);
-      
-      var colorScale = d3.scaleOrdinal(d3.schemeCategory10);
-      
-      function extractValues(series) {
-        var values = [];
-        series.forEach(function(value) {
-          value.forEach(function(item) {
-            values = values.concat(item);
-          });
-        });
-        return values;
-      }
-      
-      function stackMin() {
-        var values = extractValues(series);
-        return d3.min(values);
-      }
-      
-      function stackMax() {
-        var values = extractValues(series);
-        return d3.max(values);
-      }
-      
-      var svgContainer = d3.select("body")
+      d3.select("body")
         .append("svg")
-          .attr("width", width)
-          .attr("height", height)
-          .style("border", "1px solid");
+          .attr("width", 700)
+          .attr("height", 500)
+          .style("border", "1px solid")
       
-      function renderXAxis() {
-        var xAxis = d3.axisBottom(xScale);
-        
-        svgContainer.append("g")
-            .classed("x-axis", true)
-            .attr("transform", function() {
-              return "translate(" + margin + "," + (height - margin) + ")";
-            })
-            .call(xAxis);
-      }
+      var svgContainer = d3.select("svg"),
+          width = +svgContainer.attr("width"),
+          height = +svgContainer.attr("height");
+  
       
-      function renderYAxis() {
-        var yAxis = d3.axisLeft(yScale);
-        
-        svgContainer.append("g")
-            .classed("y-axis", true)
-            .attr("transform", function() {
-              return "translate(" + margin + "," + margin + ")";
-            })
-            .call(yAxis);
-        
-        svgContainer.selectAll("g.y-axis g.tick")
-          .append("line")
-            .classed("grid-line", true)
-            .attr("x1", 0)
-            .attr("y1", 0)
-            .attr("x2", axisLength)
-            .attr("y2", 0);
-      }
+      var tree = d3.tree()
+          .size([height, width - 100]);
       
-      renderXAxis();
-      renderYAxis();
+      var stratify = d3.stratify()
+          .id(function(d) {return d.name;})
+          .parentId(function(d) {return d.parent;});
       
-      svgContainer.append("g")
-          .classed("stack-bar", true)
-          .attr("transform", "translate(" + margin + "," + margin + ")")
-        .selectAll("g")
-        .data(series)
+      var root = stratify(data);
+      console.log(tree(root).descendants());
+      
+      var treeG = svgContainer.append("g")
+          .classed("treeG", true)
+          .attr("transform", "translate(40, 0)")
+      
+      treeG.selectAll(".links")
+        .data(tree(root).descendants().slice(1))
+        .enter()
+        .append("path")
+        .classed("link", true)
+        .attr("d", function(d) {
+          return "M" + d.y + "," + d.x
+            + "C" + (d.y + d.parent.y) / 2 + "," + d.x
+            + " " + (d.y + d.parent.y) / 2 + "," + d.parent.x
+            + " " + d.parent.y + "," + d.parent.x;
+        });
+      
+      var nodesG = treeG.selectAll(".nodes")
+        .data(root.descendants())
         .enter()
         .append("g")
-          .attr("fill", function(d) {return colorScale(d.key)})
-        .selectAll("rect")
-        .data(function(d) {return d;})
-        .enter()
-        .append("rect")
-          .attr("x", function(d, i) { return i * 100;})
-          .attr("y", function(d) {return yScale(d["1"])})
-          .attr("width", 50)
-          .attr("height", function(d) {return axisLength - (yScale(d["1"] - d["0"]))})
+          .attr("transform", function(d) {
+            return "translate(" + d.y + "," + d.x + ")"
+          });
+      
+      nodesG.append("circle")
+          .attr("r", 3)
+          .classed("node", true);
+      
+      nodesG.append("text")
+        .attr("dy", 5)
+        .attr("x", function(d) { return d.children ? -7 : 7; })
+        .style("text-anchor", function(d) { return d.children ? "end" : "start"; })
+        .text(function(d) { return d.id; });
+      
     </script>
   </body>
 </html>
