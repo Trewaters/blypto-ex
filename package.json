@@ -1,0 +1,33 @@
+{
+  "name": "blypto-ex",
+  "version": "0.0.1",
+  "description": "Javascript based cryptocurrency block explorer, portfolio generator, and US tax prep 2018.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "lite-server -c my-bs-config.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Trewaters/blypto-ex.git"
+  },
+  "keywords": [
+    "javascript",
+    "d3",
+    "electron",
+    "nodejs",
+    "node",
+    "Tre",
+    "Grisby",
+    "mongodb"
+  ],
+  "author": "Tre' Grisby",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Trewaters/blypto-ex/issues"
+  },
+  "homepage": "https://github.com/Trewaters/blypto-ex#readme",
+  "devDependencies": {
+    "lite-server": "^2.3.0"
+  }
+}
