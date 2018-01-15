@@ -5,68 +5,51 @@
     <title>D3 World Map</title>
     <style type="text/css">
     /* Write CSS here */
-    html {
-  height: 100%;
-}
-
-body {
-  background: #2c87a9;
-  height: inherit;
-  margin: 0;
-  padding: 0;
-}
-
-.map {
-  height: 100%;
-}
-
-.water {
-    fill: none;
-}
-
-.land {
-    fill: #44ab66;
-    stroke: #080808;
-    stroke-width: 0.5px;
-}
-.land:hover {
-    fill: #49988d;
-    stroke: #080808;
-    stroke-width: 1.5px;
+    body {
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  width: 960px;
+  height: 500px;
+  position: relative;
 }
     </style>
 </head>
 <body>
-    <!-- render map -->
-    <div class="map"></div>
-    <!-- render map -->
+  </style>
+  <link rel="stylesheet" href="https://unpkg.com/d3-milestones@1.0.0-alpha8/build/d3-milestones.css">
+  <script src="https://unpkg.com/d3-milestones@1.0.0-alpha8/build/d3-milestones.min.js"></script>
+<div id="timeline"></div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/4.2.2/d3.min.js"></script>
+<script>
+  milestones('#timeline')
+    .mapping({
+      'timestamp': 'year',
+      'text': 'title'
+    })
+    .parseTime('%Y')
+    .aggregateBy('year')
+    .render([
+      { year: 1983, title: 'Love Birds in Bondage' },
+      { year: 1987, title: 'My Best Friend\'s Birthday' },
+      { year: 1991, title: 'Reservoir Dogs: Sundance Institue 1991 June Film Lab' },
+      { year: 1992, title: 'Reservoir Dogs' },
+      { year: 1994, title: 'Pulp Fiction' },
+      { year: 1995, title: 'ER (Motherhood Episode)' },
+      { year: 1995, title: 'Four Rooms' },
+      { year: 1997, title: 'Jackie Brown' },
+      { year: 2003, title: 'Kill Bill: Vol. 1' },
+      { year: 2004, title: 'Kill Bill: Vol. 2' },
+      { year: 2004, title: 'Jimmy Kimmel Live! (#3.75 Episode)' },
+      { year: 2005, title: 'Sin City' },
+      { year: 2005, title: 'CSI: Crime Scene Ingestivation (2 Episodes)' },
+      { year: 2007, title: 'Grindhouse (segment "Death Proof")' },
+      { year: 2007, title: 'Death Proof' },
+      { year: 2009, title: 'Inglourious Basterds' },
+      { year: 2011, title: 'Kill Bill: The Whole Bloody Affair' },
+      { year: 2012, title: 'Django Unchained' },
+      { year: 2015, title: 'The Hateful Eight' },
+      { year: 2019, title: 'Untitled Manson Family Project (announced)' }
+    ]);
+</script>
  
-    <!-- D3 milestones CDN -->
-    
-        <link rel="stylesheet" href="https://unpkg.com/d3-milestones@1.0.0-alpha8/build/d3-milestones.css">
-    <script src="https://unpkg.com/d3-milestones@1.0.0-alpha8/build/d3-milestones.min.js"></script>
-    
-    <div id="timeline"></div>
-    
-    <script>
-      /* Write JavaScript Here  */
-      milestones('#timeline')
-        .mapping({
-          'timestamp': 'year',
-          'text': 'title'
-        })
-        .parseTime('%Y')
-        .aggregateBy('year')
-        .render([
-          { year: 1983, title: 'Love Birds in Bondage' },
-          { year: 1987, title: 'My Best Friend\'s Birthday' },
-          ...
-          { year: 2015, title: 'The Hateful Eight' },
-          { year: 2019, title: 'Untitled Manson Family Project (announced)' }
-        ]);
-    </script>
 </body>
 </html>
